@@ -1,4 +1,9 @@
+import { Suspense } from 'react'
 import { LoginForm } from '@/components/auth'
+
+function LoginFormWrapper() {
+  return <LoginForm />
+}
 
 export default function LoginPage() {
   return (
@@ -14,7 +19,9 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-8">
-          <LoginForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <LoginFormWrapper />
+          </Suspense>
         </div>
       </div>
     </div>

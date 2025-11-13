@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getCurrentUser, getCurrentRestaurant } from '@/lib/auth'
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/restaurants
  * Get current restaurant information
