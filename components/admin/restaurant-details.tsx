@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ExternalLink, Store, Package, QrCode, Eye } from 'lucide-react'
@@ -29,11 +29,7 @@ export function RestaurantDetails({ restaurantId }: { restaurantId: string }) {
   const [data, setData] = useState<RestaurantDetailsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    fetchRestaurantDetails()
-  }, [restaurantId])
-
-  const fetchRestaurantDetails = async () => {
+  const fetchRestaurantDetails = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/restaurants/${restaurantId}`)
       if (response.ok) {
@@ -45,7 +41,11 @@ export function RestaurantDetails({ restaurantId }: { restaurantId: string }) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [restaurantId])
+
+  useEffect(() => {
+    fetchRestaurantDetails()
+  }, [fetchRestaurantDetails])
 
   if (isLoading) {
     return (

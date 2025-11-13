@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -26,11 +26,7 @@ export function RestaurantList() {
   const [status, setStatus] = useState<string>('all')
   const [page, setPage] = useState(1)
 
-  useEffect(() => {
-    fetchRestaurants()
-  }, [page, status])
-
-  const fetchRestaurants = async () => {
+  const fetchRestaurants = useCallback(async () => {
     setIsLoading(true)
     try {
       const params = new URLSearchParams({
@@ -56,7 +52,11 @@ export function RestaurantList() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [page, status, search])
+
+  useEffect(() => {
+    fetchRestaurants()
+  }, [fetchRestaurants])
 
   const handleSearch = () => {
     setPage(1)

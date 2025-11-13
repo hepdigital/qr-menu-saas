@@ -9,7 +9,7 @@ export default function LoginPage() {
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Manage your restaurant's digital menu
+            Manage your restaurant&apos;s digital menu
           </p>
         </div>
 

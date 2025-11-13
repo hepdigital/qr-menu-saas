@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -46,11 +46,7 @@ export function PaymentList() {
   const [status, setStatus] = useState<string>('all')
   const [page, setPage] = useState(1)
 
-  useEffect(() => {
-    fetchPayments()
-  }, [page, status])
-
-  const fetchPayments = async () => {
+  const fetchPayments = useCallback(async () => {
     setIsLoading(true)
     try {
       const params = new URLSearchParams({
@@ -72,7 +68,11 @@ export function PaymentList() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [page, status])
+
+  useEffect(() => {
+    fetchPayments()
+  }, [fetchPayments])
 
   const getStatusBadge = (status: string) => {
     const styles = {

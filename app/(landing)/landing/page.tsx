@@ -426,7 +426,7 @@ export default function LandingPage() {
             Get In Touch
           </h2>
           <p className="max-w-[700px] text-lg text-muted-foreground">
-            Have questions? We're here to help you get started
+            Have questions? We&apos;re here to help you get started
           </p>
         </div>
         

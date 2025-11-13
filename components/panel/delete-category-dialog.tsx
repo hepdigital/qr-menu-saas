@@ -57,7 +57,7 @@ export function DeleteCategoryDialog({
         <DialogHeader>
           <DialogTitle>Delete Category</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete "{category.name}"? This action cannot be undone.
+            Are you sure you want to delete &quot;{category.name}&quot;? This action cannot be undone.
             Products in this category will not be deleted but will be unassigned.
           </DialogDescription>
         </DialogHeader>
