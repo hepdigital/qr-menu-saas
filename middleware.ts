@@ -4,19 +4,18 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || ''
   const url = request.nextUrl.clone()
+  const pathname = url.pathname
   
   // Extract subdomain from hostname
-  // Handle both production (qrmenu.app) and localhost scenarios
-  const isLocalhost = hostname.includes('localhost')
+  const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1')
   
   let subdomain = ''
   
   if (isLocalhost) {
-    // For local development, check for subdomain in localhost:3000 format
-    // or use query parameter for testing: ?subdomain=panel
+    // For local development, use query parameter for testing: ?subdomain=panel
     subdomain = url.searchParams.get('subdomain') || ''
   } else {
-    // Extract subdomain from hostname (e.g., panel.qrmenu.app -> panel)
+    // Extract subdomain from hostname (e.g., panel.qr-menu-saas-sepia.vercel.app -> panel)
     const parts = hostname.split('.')
     
     // If we have at least 3 parts (subdomain.domain.tld), extract subdomain
@@ -32,22 +31,22 @@ export function middleware(request: NextRequest) {
   
   // Main domain (no subdomain or www) - Landing Site
   if (!subdomain || subdomain === 'www') {
-    // Rewrite to /landing route
-    url.pathname = `/landing${url.pathname === '/' ? '' : url.pathname}`
-    return NextResponse.rewrite(url)
+    // Allow direct access to /panel, /admin, /menu paths on main domain
+    // This allows https://qr-menu-saas-sepia.vercel.app/panel/login to work
+    return NextResponse.next()
   }
   
   // Panel subdomain - Restaurant Panel
   if (subdomain === 'panel') {
     // Rewrite to /panel route
-    url.pathname = `/panel${url.pathname === '/' ? '' : url.pathname}`
+    url.pathname = `/panel${pathname === '/' ? '' : pathname}`
     return NextResponse.rewrite(url)
   }
   
   // Admin subdomain - Super Admin Panel
   if (subdomain === 'admin') {
     // Rewrite to /admin route
-    url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`
+    url.pathname = `/admin${pathname === '/' ? '' : pathname}`
     return NextResponse.rewrite(url)
   }
   
@@ -55,7 +54,7 @@ export function middleware(request: NextRequest) {
   // Any other subdomain is treated as a restaurant slug
   // Pass subdomain as search param for restaurant lookup
   url.searchParams.set('restaurant', subdomain)
-  url.pathname = `/menu${url.pathname === '/' ? '' : url.pathname}`
+  url.pathname = `/menu${pathname === '/' ? '' : pathname}`
   return NextResponse.rewrite(url)
 }
 
