@@ -81,9 +81,6 @@ Middleware (`middleware.ts`) gelen istekleri analiz eder:
 app/
 ├── page.tsx                          # Landing page (/)
 ├── layout.tsx                        # Root layout
-├── (landing)/                        # Landing route group
-│   ├── layout.tsx
-│   └── page.tsx
 ├── (panel)/                          # Panel route group
 │   └── panel/                        # /panel/*
 │       ├── layout.tsx
