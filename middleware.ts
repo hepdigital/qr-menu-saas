@@ -6,6 +6,17 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone()
   const pathname = url.pathname
   
+  // Skip middleware for these paths - let Next.js handle them directly
+  if (
+    pathname.startsWith('/panel') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/favicon')
+  ) {
+    return NextResponse.next()
+  }
+  
   // Extract subdomain from hostname
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1')
   
@@ -18,8 +29,9 @@ export function middleware(request: NextRequest) {
     // Extract subdomain from hostname (e.g., panel.qr-menu-saas-sepia.vercel.app -> panel)
     const parts = hostname.split('.')
     
-    // If we have at least 3 parts (subdomain.domain.tld), extract subdomain
-    if (parts.length >= 3) {
+    // For Vercel: qr-menu-saas-sepia.vercel.app has 3 parts (no subdomain)
+    // panel.qr-menu-saas-sepia.vercel.app has 4 parts (subdomain = panel)
+    if (parts.length >= 4) {
       subdomain = parts[0]
       
       // Ignore 'www' as a subdomain
@@ -29,10 +41,13 @@ export function middleware(request: NextRequest) {
     }
   }
   
-  // Main domain (no subdomain or www) - Landing Site
-  if (!subdomain || subdomain === 'www') {
-    // Allow direct access to /panel, /admin, /menu paths on main domain
-    // This allows https://qr-menu-saas-sepia.vercel.app/panel/login to work
+  // Main domain (no subdomain) - Landing Site
+  if (!subdomain) {
+    // Show landing page for root path
+    if (pathname === '/') {
+      return NextResponse.next()
+    }
+    // For other paths on main domain, let Next.js handle them
     return NextResponse.next()
   }
   
@@ -52,7 +67,6 @@ export function middleware(request: NextRequest) {
   
   // Restaurant subdomain - Digital Menu
   // Any other subdomain is treated as a restaurant slug
-  // Pass subdomain as search param for restaurant lookup
   url.searchParams.set('restaurant', subdomain)
   url.pathname = `/menu${pathname === '/' ? '' : pathname}`
   return NextResponse.rewrite(url)
