@@ -48,6 +48,8 @@ Vercel deployment tamamlandıktan sonra (1-2 dakika) aşağıdaki URL'leri test 
 - ✅ Admin login formu gösterilmeli
 - ✅ "Super Admin Panel" başlığı olmalı
 - ❌ 404 hatası OLMAMALI
+- ❌ 307 redirect loop OLMAMALI
+- ❌ ERR_TOO_MANY_REDIRECTS OLMAMALI
 
 ---
 
