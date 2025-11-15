@@ -86,20 +86,29 @@ export const productSchema = z.object({
     .max(200, 'Product name must not exceed 200 characters'),
   name_en: z.string()
     .max(200, 'English product name must not exceed 200 characters')
+    .nullable()
     .optional(),
   description: z.string()
     .max(1000, 'Description must not exceed 1000 characters')
+    .nullable()
     .optional(),
   description_en: z.string()
     .max(1000, 'English description must not exceed 1000 characters')
+    .nullable()
     .optional(),
   price: z.number()
     .positive('Price must be positive')
     .max(999999.99, 'Price is too large'),
   category_id: z.string()
     .uuid('Invalid category ID')
+    .nullable()
+    .optional(),
+  image_url: z.string()
+    .url('Invalid image URL')
+    .nullable()
     .optional(),
   allergens: z.array(z.string())
+    .nullable()
     .optional(),
   is_available: z.boolean()
     .default(true),
@@ -116,12 +125,15 @@ export const updateProductSchema = z.object({
     .optional(),
   name_en: z.string()
     .max(200, 'English product name must not exceed 200 characters')
+    .nullable()
     .optional(),
   description: z.string()
     .max(1000, 'Description must not exceed 1000 characters')
+    .nullable()
     .optional(),
   description_en: z.string()
     .max(1000, 'English description must not exceed 1000 characters')
+    .nullable()
     .optional(),
   price: z.number()
     .positive('Price must be positive')
@@ -133,8 +145,10 @@ export const updateProductSchema = z.object({
     .optional(),
   image_url: z.string()
     .url('Invalid image URL')
+    .nullable()
     .optional(),
   allergens: z.array(z.string())
+    .nullable()
     .optional(),
   is_available: z.boolean()
     .optional(),
@@ -164,9 +178,11 @@ export const themeCustomizationSchema = z.object({
 export const updateThemeSchema = z.object({
   logo_url: z.string()
     .url('Invalid logo URL')
+    .nullable()
     .optional(),
   cover_image_url: z.string()
     .url('Invalid cover image URL')
+    .nullable()
     .optional(),
   primary_color: z.string()
     .regex(/^#[0-9A-F]{6}$/i, 'Invalid color format. Use hex format (e.g., #FF5733)')

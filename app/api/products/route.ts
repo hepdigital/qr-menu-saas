@@ -116,7 +116,8 @@ export async function POST(request: NextRequest) {
       description, 
       description_en, 
       price, 
-      category_id, 
+      category_id,
+      image_url, 
       allergens, 
       is_available, 
       display_order 
@@ -152,6 +153,7 @@ export async function POST(request: NextRequest) {
         description_en: description_en || null,
         price,
         category_id: category_id || null,
+        image_url: image_url || null,
         allergens: allergens || null,
         is_available: is_available ?? true,
         display_order: display_order ?? 0,
