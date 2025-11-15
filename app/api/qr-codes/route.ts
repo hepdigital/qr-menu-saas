@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentRestaurant } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
+import { getRestaurantUrl } from '@/lib/domain'
 import QRCode from 'qrcode'
 import { z } from 'zod'
 
@@ -80,15 +81,8 @@ export async function POST(request: NextRequest) {
 
     const { table_number } = validation.data
 
-    // Get the app URL from environment or construct it
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    const baseUrl = appUrl.replace(/^https?:\/\//, '').replace(/^www\./, '')
-    
     // Construct the QR data URL with restaurant subdomain and table number
-    let qrDataUrl = `https://${restaurant.slug}.${baseUrl}`
-    if (table_number) {
-      qrDataUrl += `?table=${encodeURIComponent(table_number)}`
-    }
+    const qrDataUrl = getRestaurantUrl(restaurant.slug, table_number)
 
     // Generate QR code as data URL
     const qrCodeDataUrl = await QRCode.toDataURL(qrDataUrl, {

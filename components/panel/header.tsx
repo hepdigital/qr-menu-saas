@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { Restaurant } from '@/types/database'
+import { useRestaurantDomain } from '@/hooks/use-domain'
 
 interface HeaderProps {
   restaurant: Restaurant
@@ -14,6 +15,7 @@ interface HeaderProps {
 export function Header({ restaurant }: HeaderProps) {
   const router = useRouter()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const restaurantDomain = useRestaurantDomain(restaurant.slug)
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -50,7 +52,7 @@ export function Header({ restaurant }: HeaderProps) {
           )}
           <div>
             <h2 className="text-sm font-semibold text-gray-900">{restaurant.name}</h2>
-            <p className="text-xs text-gray-500">{restaurant.slug}.qrmenu.app</p>
+            <p className="text-xs text-gray-500">{restaurantDomain}</p>
           </div>
         </div>
 
