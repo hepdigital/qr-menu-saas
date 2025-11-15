@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentRestaurant } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { CategoryList } from '@/components/panel/category-list'
-import { ProductList } from '@/components/panel/product-list'
+import { MenuManager } from '@/components/panel/menu-manager'
 
 export default async function MenuPage() {
   const restaurant = await getCurrentRestaurant()
@@ -43,20 +42,9 @@ export default async function MenuPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Menu Management</h1>
-        <p className="mt-2 text-gray-600">Manage your categories and products</p>
-      </div>
-      
-      <CategoryList initialCategories={categories || []} />
-      
-      <div className="border-t pt-8">
-        <ProductList 
-          initialProducts={products || []} 
-          categories={categories || []} 
-        />
-      </div>
-    </div>
+    <MenuManager 
+      initialCategories={categories || []} 
+      initialProducts={products || []} 
+    />
   )
 }

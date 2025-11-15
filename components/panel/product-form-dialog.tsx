@@ -30,6 +30,7 @@ interface ProductFormDialogProps {
   product?: Product
   categories: Category[]
   onSuccess: (product: Product) => void
+  defaultCategoryId?: string
 }
 
 const COMMON_ALLERGENS = [
@@ -50,13 +51,14 @@ export function ProductFormDialog({
   product,
   categories,
   onSuccess,
+  defaultCategoryId,
 }: ProductFormDialogProps) {
   const [name, setName] = useState(product?.name || '')
   const [nameEn, setNameEn] = useState(product?.name_en || '')
   const [description, setDescription] = useState(product?.description || '')
   const [descriptionEn, setDescriptionEn] = useState(product?.description_en || '')
   const [price, setPrice] = useState(product?.price?.toString() || '')
-  const [categoryId, setCategoryId] = useState(product?.category_id || '')
+  const [categoryId, setCategoryId] = useState(product?.category_id || defaultCategoryId || '')
   const [allergens, setAllergens] = useState<string[]>(product?.allergens || [])
   const [imageUrl, setImageUrl] = useState(product?.image_url || '')
   const [imageFile, setImageFile] = useState<File | null>(null)
