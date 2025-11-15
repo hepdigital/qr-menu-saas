@@ -344,12 +344,12 @@ export function ProductFormDialog({
 
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <Select value={categoryId} onValueChange={setCategoryId} disabled={isLoading}>
+                <Select value={categoryId || 'none'} onValueChange={(value) => setCategoryId(value === 'none' ? '' : value)} disabled={isLoading}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No category</SelectItem>
+                    <SelectItem value="none">No category</SelectItem>
                     {categories.map(category => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name}
