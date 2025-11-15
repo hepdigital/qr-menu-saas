@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/server'
 import { getCurrentUser, getCurrentRestaurant } from '@/lib/auth'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
@@ -68,14 +68,12 @@ export async function POST(request: NextRequest) {
     const fileExt = file.name.split('.').pop()
     const fileName = `${restaurant.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
     
-    const supabase = await createClient()
-    
     // Convert File to ArrayBuffer
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
     
-    // Upload to Supabase Storage
-    const { data, error } = await supabase
+    // Upload to Supabase Storage using admin client (has full permissions)
+    const { data, error } = await supabaseAdmin
       .storage
       .from(bucket)
       .upload(fileName, buffer, {
@@ -86,13 +84,13 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Error uploading file:', error)
       return NextResponse.json(
-        { error: 'Failed to upload file' },
+        { error: `Failed to upload file: ${error.message}` },
         { status: 500 }
       )
     }
     
     // Get public URL
-    const { data: { publicUrl } } = supabase
+    const { data: { publicUrl } } = supabaseAdmin
       .storage
       .from(bucket)
       .getPublicUrl(data.path)
@@ -107,7 +105,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Unexpected error:', error)
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      { error: `An unexpected error occurred: ${error instanceof Error ? error.message : 'Unknown error'}` },
       { status: 500 }
     )
   }
